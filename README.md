@@ -2,14 +2,14 @@
 
 Ứng dụng web hỗ trợ thư viện quản lý sách, độc giả, nhân viên và các hoạt động mượn trả sách. Dự án được xây dựng nhằm số hóa các quy trình nghiệp vụ cơ bản của thư viện, giúp việc tra cứu, lập phiếu mượn, theo dõi trạng thái sách và quản lý dữ liệu thuận tiện hơn.
 
-## 1. Tổng quan
+## Tổng quan
 
 Hệ thống phục vụ hai nhóm người dùng chính:
 
 - **Độc giả:** tra cứu sách, lọc sách theo thể loại hoặc tác giả, xem chi tiết sách, thêm sách yêu thích, thêm sách vào giỏ mượn, gửi yêu cầu mượn và theo dõi lịch sử mượn.
 - **Nhân viên thư viện và quản trị viên:** quản lý sách, độc giả, nhân viên, tài khoản, phiếu nhập, phiếu mượn, phiếu trả, tác giả, nhà xuất bản, nhà cung cấp, thể loại, trạng thái sách, hình thức phạt, phân quyền và thống kê.
 
-## 2. Chức năng chính
+## Chức năng chính
 
 ### Dành cho độc giả
 
@@ -34,7 +34,7 @@ Hệ thống phục vụ hai nhóm người dùng chính:
 - Quản lý chức năng và phân quyền người dùng.
 - Tra cứu dữ liệu và hiển thị thống kê phục vụ quản lý thư viện.
 
-## 3. Quy trình nghiệp vụ tiêu biểu
+## Quy trình nghiệp vụ tiêu biểu
 
 ### Quy trình mượn sách
 
@@ -52,7 +52,7 @@ Hệ thống phục vụ hai nhóm người dùng chính:
 4. Hệ thống ghi nhận phí phạt nếu phát sinh.
 5. Trạng thái sách được cập nhật để có thể tiếp tục quản lý và cho mượn.
 
-## 4. Công nghệ sử dụng
+## Công nghệ sử dụng
 
 - **PHP:** xử lý logic phía máy chủ, điều hướng trang, xử lý biểu mẫu và các chức năng nghiệp vụ.
 - **MySQL:** lưu trữ dữ liệu sách, độc giả, nhân viên, tài khoản và giao dịch thư viện.
@@ -62,7 +62,7 @@ Hệ thống phục vụ hai nhóm người dùng chính:
 - **Bootstrap 4 và SB Admin 2:** xây dựng layout, bảng dữ liệu, biểu mẫu và giao diện quản trị.
 - **Font Awesome:** cung cấp biểu tượng cho giao diện.
 
-## 5. Cấu trúc thư mục chính
+## Cấu trúc thư mục chính
 
 ```text
 .
@@ -84,14 +84,14 @@ Hệ thống phục vụ hai nhóm người dùng chính:
 └── QLTV_img_sach/            # Hình ảnh và dữ liệu phân loại sách
 ```
 
-## 6. Yêu cầu môi trường
+## Yêu cầu môi trường
 
 - PHP 7.4 trở lên.
 - MySQL hoặc MariaDB.
 - Apache hoặc một web server tương thích PHP, có thể sử dụng XAMPP.
 - Trình duyệt web hiện đại.
 
-## 7. Cài đặt và chạy dự án
+## Cài đặt và chạy dự án
 
 1. Clone hoặc tải dự án về thư mục web server, ví dụ thư mục `htdocs` của XAMPP.
 
@@ -120,7 +120,7 @@ Hệ thống phục vụ hai nhóm người dùng chính:
 
 > Lưu ý: Dự án cần có cấu trúc bảng và dữ liệu tương ứng trong cơ sở dữ liệu `thuvien` trước khi các chức năng truy vấn và quản lý có thể hoạt động đầy đủ.
 
-## 8. Định hướng phân tích và thiết kế
+## Định hướng phân tích và thiết kế
 
 Trong quá trình thực hiện dự án, nhóm đã phân tích các quy trình nghiệp vụ của hệ thống quản lý thư viện và mô hình hóa chúng bằng nhiều loại sơ đồ, gồm:
 
@@ -134,7 +134,7 @@ Trong quá trình thực hiện dự án, nhóm đã phân tích các quy trình
 
 Các mô hình này được sử dụng để làm rõ yêu cầu, luồng xử lý, dữ liệu và mối liên hệ giữa các chức năng trước khi triển khai hệ thống.
 
-## 9. Vai trò cá nhân trong dự án
+## Vai trò cá nhân trong dự án
 
 - Phân tích và đặc tả phần lớn yêu cầu nghiệp vụ của hệ thống.
 - Trực tiếp xây dựng phần lớn Use Case Diagram, Sequence Diagram và BFD.
