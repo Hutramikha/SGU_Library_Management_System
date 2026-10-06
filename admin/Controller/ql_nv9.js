@@ -312,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         const img = data.list_tim_anh_nv[0];
                         if (img.img !== null) {
                             // Nếu có hình ảnh, cập nhật thẻ img với đường dẫn hình ảnh
-                            $('.image-nv').attr('src', '../img/' + img.img);
+                            $('.image-nv').attr('src', '../avatar/' + img.img);
                             imageFile_check_nv = img.img;
                         } else {
                             // Nếu không có hình ảnh, có thể ẩn thẻ img hoặc hiển thị hình ảnh mặc định

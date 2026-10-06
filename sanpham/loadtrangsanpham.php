@@ -1,6 +1,15 @@
 <?php
-$db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+try {
+    $dsn = "mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8";
+    $username = "root";
+    $password = ""; // nếu bạn không đặt mật khẩu
+
+    $db = new PDO($dsn, $username, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+} catch (PDOException $e) {
+    die("Lỗi kết nối CSDL: " . $e->getMessage());
+}
 $theLoaiSach_sql = $db->prepare("SELECT * FROM theloai");
 $theLoaiSach_sql->execute();
 $theLoaiSach = $theLoaiSach_sql->fetchAll(PDO::FETCH_ASSOC);
@@ -12,7 +21,7 @@ $tacGia = $tacGia_sql->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="filter">
     <nav class="navbar navbar-expand navbar-light bg-light mb-4">
-        <!-- <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown" id="locYeuThichDropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -24,7 +33,7 @@ $tacGia = $tacGia_sql->fetchAll(PDO::FETCH_ASSOC);
                     <a href="#" class="dropdown-item" id="showWellLiked">Được yêu thích</a>
                 </div>
             </li>
-        </ul> -->
+        </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown" id="locTheLoaiDropdown" >
                 <div class="nav-link dropdown-toggle" id="navbarDropdown"

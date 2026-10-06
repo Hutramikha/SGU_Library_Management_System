@@ -1,11 +1,62 @@
 <?php
+session_set_cookie_params([
+    'lifetime' => 0,                // session tồn tại đến khi đóng trình duyệt
+    'path' => '/',
+    'domain' => '',                 // để trống = chỉ domain hiện tại
+    'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
+    'httponly' => true,             // ngăn JavaScript truy cập cookie
+    'samesite' => 'Strict'          // không gửi cookie khi request từ site khác
+]);
+
 require '../DAO/database/connect.php'; 
 session_start();
+$session_timeout = 150;
 
-if (isset($_SESSION['mySession'])) {
-    $tenDangNhap = $_SESSION['mySession'][0];
+if (!isset($_SESSION['username'], $_SESSION['maquyen']) ||
+    !in_array((int) $_SESSION['maquyen'], [0, 1], true)) {
+    header('Location: /SGU_Library_Management_System/index.php');
+    exit();
+}
+
+// Kiểm tra phía server (nếu có request)
+if (isset($_SESSION['login_time']) && isset($session_timeout) && isset($_SESSION['username'])) {
+    if (time() - $_SESSION['login_time'] > $session_timeout) {
+        session_unset();
+        session_destroy();
+        echo "<script>
+            alert('Phiên đăng nhập đã hết hạn. Bạn sẽ được chuyển về trang chủ.');
+            window.location.href = '/SGU_Library_Management_System/index.php';
+        </script>";
+        exit();
+    }
+}
+
+if (isset($_SESSION['username'])) {
+    $tenDangNhap = $_SESSION['username'];
+    $tentaikhoan = ""; // Khởi tạo biến tên tài khoản
+
+    // Truy vấn lấy tên từ bảng nhân viên
+    $sql = "SELECT ten FROM nhanvien WHERE matk = ?";
+    $stmt = $connect->prepare($sql);
+    $stmt->bind_param("s", $tenDangNhap); // matk là chuỗi
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        $tentaikhoan = $row['ten'] ?? $tenDangNhap;
+    }
+
+    // Xác định quyền
+    if ($_SESSION['maquyen'] == 0) {
+        $quyen = "Quản trị viên";
+    } elseif ($_SESSION['maquyen'] == 1) {
+        $quyen = "Thủ thư";
+    } else {
+        $quyen = "Không xác định";
+    }
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -17,9 +68,10 @@ if (isset($_SESSION['mySession'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="./style/styleadmin10.css">
+    <link rel="stylesheet" href="./style/styleadmin13.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 
 <body>
     <div class="admin_sidebar close">
@@ -28,12 +80,12 @@ if (isset($_SESSION['mySession'])) {
             <span class="logo_name" id="title-visible">DiagonAlley.com</span>
         </div>
         <ul class="nav-links">
-            <li class="out-li">
-                <a class="gohome btn" href="./trangchu.html" style="text-decoration: none;">
+            <!-- <li class="out-li">
+                <a class="gohome btn" href="/SGU_Library_Management_System/index.php" style="text-decoration: none;">
                     <i class='bx bx-home'></i>
                     <span class="link_name no-select" id="text-visible"> Trang chủ</span>
                 </a>
-            </li>
+            </li> -->
             <li class="out-li">
                 <div class="toggle-menu btn">
                     <i class='bx bxs-right-arrow-square arrow_menu'></i>
@@ -119,8 +171,8 @@ if (isset($_SESSION['mySession'])) {
                         <img src="../img/hacker2.png" alt="profile" id="profile-img">
                     </div>
                     <div class="name-job">
-                        <div class="profile-name no-select">Khang</div>
-                        <div class="job no-select">Thủ thư</div>
+                        <div class="profile-name no-select"><?php echo htmlspecialchars($tentaikhoan); ?></div>
+                        <div class="job no-select"><?php echo htmlspecialchars($quyen); ?></div>
                     </div>
                     <i class='bx bx-log-out no-select btn-logout' style="cursor: pointer;" id="logoutButton"></i>
                 </div>
@@ -224,7 +276,7 @@ if (isset($_SESSION['mySession'])) {
                                 required>
                         </div>
                     </div>
-                    <div class="image-container">
+                    <div class="image-container" style = "display: flex; flex-direction: column; align-items: center;">
                         <div class="image-preview">
                             <img id="image_max" class="image-sach" src="../img/noimages.png" alt="">
                         </div>
@@ -1856,11 +1908,11 @@ if (isset($_SESSION['mySession'])) {
                         <h1>THÔNG TIN CÁ NHÂN</h1>
                     </div>
                 </div>
-                <!-- <div class="button_contain">
+                <div class="button_contain">
                     <button class="btn_action btn-edit btn-edit-info_admin">Sửa</button>
                     <button class="btn_action btn-save btn-save-info_admin" disabled>Lưu</button>
                     <button class="btn_action btn-cancel btn-cancel-info_admin" disabled>Hủy</button>
-                </div> -->
+                </div>
                 <div style="display: flex; justify-content: center; margin-top: 1%;">
                     <div class="input_contain" style="width: 50%; flex-direction: column;">
                         <div class="input_contain_child">
@@ -1900,12 +1952,17 @@ if (isset($_SESSION['mySession'])) {
                             </div>
                             <div class="input-group">
                                 <label class="input-label">Ảnh đại diện:</label>
-                                <!-- <input type="file" id="image-upload" class="image-upload info_admin-btn_img"
-                                    onchange="previewImageNVinfo(event)" accept="image/*" disabled> -->
-                                    <div class="image-container">
-                                        <div class="image-preview">
-                                            <img id="image_max" class="image-nv-info" src="../img/noimages.png" alt="">
+                                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                        <div class="image-container">
+                                            <div class="image-preview">
+                                                <img id="image_max" class="image-nv-info" src="../img/noimages.png" alt="">
+                                            </div>
                                         </div>
+                                        <div style="position: relative;">
+                                        <input type="file" id="image-upload_info_admin" class="hidden-file" onchange="previewImageNVinfo(event)" accept="image/*" disabled>
+                                        <label for="image-upload_info_admin" class="label_img">Chọn ảnh</label>
+                                        </div>
+
                                     </div>
                                 </div>
                         </div>
@@ -1922,37 +1979,101 @@ if (isset($_SESSION['mySession'])) {
     <div style = "display: none;" id="userInfo" data-username="<?php echo htmlspecialchars($tenDangNhap); ?>"></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="../Controller/jsadmin4.js"></script>
+    <script src="../Controller/jsadmin7.js"></script>
     <script src="../Controller/ql_sach16.js"></script>
-    <script src="../Controller/ql_nv8.js"></script>
+    <script src="../Controller/ql_nv9.js"></script>
     <script src="../Controller/ql_phanquyen2.js"></script>
     <script src="../Controller/ql_dg5.js"></script>
     <script src="../Controller/ql_phieunhap18.js"></script>
     <script src="../Controller/ql_phieumuon7.js"></script>
     <script src="../Controller/ql_phieutra11.js"></script>
     <script src="../Controller/ql_taikhoan7.js"></script>
-    <script src="../Controller/info_admin4.js"></script>
+    <script src="../Controller/info_admin9.js"></script>
     <script src="../Controller/thongke.js"></script>
 
+
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            getUserInfo('admin'); // Gọi hàm với mã tài khoản cụ thể
-            getUserNAME('admin');
-
              // Lấy tên đăng nhập từ data-attribute
         var tenDangNhap = document.getElementById('userInfo').getAttribute('data-username');
+        getUserInfo(tenDangNhap);
         getUserNAME(tenDangNhap); // Gọi hàm với tên đăng nhập
-        console.log('hekooooo' + tenDangNhap );
+        console.log('helooooo' + tenDangNhap );
         });
-
-
-        document.getElementById('logoutButton').addEventListener('click', function() {
-    if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
-        // Chuyển hướng đến trang logout.php để xử lý đăng xuất
-        window.location.href = '../DAO/dn_dk/logout.php';
-    }
-});
     </script>
+
+    <?php if (isset($_SESSION['login_time']) && isset($session_timeout) && isset($_SESSION['username'])) : ?>
+        <script>
+            if (!window.sessionTrackerInitialized) {
+            window.sessionTrackerInitialized = true;
+
+            const timeout = <?php echo $session_timeout; ?> * 1000;
+            let reloadTimer = null;
+            let expiredHandled = false;
+            let debounceTimer = null;
+            let scheduleRunning = false;
+
+            // --- Hàm cập nhật session lên server ---
+            function updateSession() {
+                clearTimeout(debounceTimer);
+
+                debounceTimer = setTimeout(() => {
+                    fetch('/SGU_Library_Management_System/update_session.php')
+                        .then(() => scheduleReload());
+                }, 300);
+            }
+
+            // --- Lên lịch reload nếu hết hạn ---
+            function scheduleReload() {
+                if (scheduleRunning) return; // chặn chạy song song
+                scheduleRunning = true;
+
+                fetch('/SGU_Library_Management_System/get_session.php')
+                    .then(res => res.text())
+                    .then(loginTimeStr => {
+                        scheduleRunning = false;
+
+                        const loginTime = parseInt(loginTimeStr) * 1000;
+                        if (!loginTime) return;
+
+                        const now = Date.now();
+                        const remaining = (loginTime + timeout) - now;
+
+                        // Xóa timer cũ để tránh chồng timeout
+                        if (reloadTimer) clearTimeout(reloadTimer);
+
+                        if (remaining > 0) {
+                            reloadTimer = setTimeout(() => {
+                                if (!expiredHandled) {
+                                    expiredHandled = true;
+                                    location.reload();
+                                }
+                            }, remaining);
+                        } else {
+                            if (!expiredHandled) {
+                                expiredHandled = true;
+                                location.reload();
+                            }
+                        }
+                    });
+            }
+
+            // --- Lắng nghe thao tác người dùng ---
+            document.addEventListener('click', updateSession);
+            document.addEventListener('scroll', updateSession);
+            document.addEventListener('keydown', updateSession);
+
+            // --- Gọi lần đầu ---
+            scheduleReload();
+        }
+        </script>
+    <?php endif; ?>
+
 </body>
 
 </html>
+
+<?php 
+    mysqli_close($connect);
+?>

@@ -1,5 +1,5 @@
 <?php
-$userId = isset($_GET['userId']) ? $_GET['userId'] : '';
+$userId = isset($_SESSION['idDocGia']) ? $_SESSION['idDocGia'] : '';
 $id_prd = isset($_GET['id']) ? $_GET['id'] : 0;
 $currentPage = isset($_GET['currentPage']) ? $_GET['currentPage'] : 0;
 $favo = isset($_GET['favo']) ? $_GET['favo'] : 0;
@@ -8,7 +8,17 @@ $wellLiked = isset($_GET['wellLiked']) ? $_GET['wellLiked'] : 0;
 $author = isset($_GET['author']) ? $_GET['author'] : '';
 $genre = isset($_GET['genre']) ? $_GET['genre'] : '';
 
-$db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
+try {
+    $dsn = "mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8";
+    $username = "root";
+    $password = ""; // nếu bạn không đặt mật khẩu
+
+    $db = new PDO($dsn, $username, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+} catch (PDOException $e) {
+    die("Lỗi kết nối CSDL: " . $e->getMessage());
+}
 $stmt = $db->prepare("SELECT sach.masach, sach.tensach, sach.img, sach.phimuon, sach.tomtat, 
                       tacgia.tentg AS tacGia, 
                       nhaxuatban.tennxb AS nhaXuatBan, 
@@ -76,7 +86,7 @@ if ($thongtinchitiet) {
                     Thêm vào giỏ hàng thành công
                 </div>
 
-                <div class="book-details__img"><img src="thuvien/img/' . $img . '" alt=""></div>
+                <div class="book-details__img"><img src="admin/img/' . $img . '" alt=""></div>
                 <div class="book-details__info">
                     <h4>Tiêu đề: ' . $tensach . '</h4>
                     <p>Tác giả: ' . $tacGia . ' <br>Thể loại: ' . $theLoai . ' <br>Nhà xuất bản: ' . $nhaXuatBan . '</p>

@@ -1,23 +1,40 @@
 <?php
-require '../DAO/database/connect.php'; 
-
+require '../DAO/database/connect.php';
 session_start();
 
-if (isset($_COOKIE['user']) && isset($_COOKIE['pass'])) {
-    $usernameluu = $_COOKIE['user'];
-    $passwordluu = $_COOKIE['pass'];
-    
-} else {
-    $usernameluu = "";
-    $passwordluu = "";
-}
+// Đọc thông tin từ cookie nếu có
+$usernameluu = isset($_COOKIE['user']) ? $_COOKIE['user'] : "";
+$passwordluu = isset($_COOKIE['pass']) ? $_COOKIE['pass'] : "";
 
-if (isset($_SESSION['mySession'])) {
-    echo '<a href="trangadmin copy.php" id="adminLink" style="text-decoration: none;">
-    <button style="cursor: pointer;">Admin</button>
-</a>';
+// Kiểm tra nếu đã đăng nhập
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+
+    // Nếu chưa có maquyen trong session thì truy vấn từ DB
+    if (!isset($_SESSION['maquyen'])) {
+        $username = mysqli_real_escape_string($connect, $username);
+        $sql = "SELECT maquyen FROM taikhoan WHERE tendangnhap = '$username'";
+        $result = mysqli_query($connect, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $_SESSION['maquyen'] = $row['maquyen'];
+        } else {
+            $_SESSION['maquyen'] = -1;
+        }
+    }
+
+    // Kiểm tra quyền truy cập
+    if ($_SESSION['maquyen'] == 0 || $_SESSION['maquyen'] == 1) {
+        header("Location: trangadmin.php");
+        exit();
+    } else {
+        echo '<p>Chào ' . htmlspecialchars($username) . ', bạn không có quyền truy cập admin.</p>';
+    }
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">

@@ -1,9 +1,9 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "thuvien", 3307);
+$conn = mysqli_connect("localhost", "root", "", "thuvien",3307);
 
 if ($conn) {
-    $userId = isset($_GET['userId']) ? intval($_GET['userId']) : '';
+    $userId = isset($_SESSION['idDocGia']) ? $_SESSION['idDocGia'] : '';
     $prd_id = isset($_GET['prd_id']) ? intval($_GET['prd_id']) : '';
 
     $sql_select = "SELECT masach FROM giomuontamthoi WHERE madocgia = $userId AND masach = $prd_id AND trangthai = 0";

@@ -1,11 +1,20 @@
 <?php
-$userId =  isset($_GET['userId']) ? $_GET['userId'] : '';
+$userId = isset($_SESSION['idDocGia']) ? $_SESSION['idDocGia'] : '';
 $list_prd_id = isset($_GET['list_prd_id']) ? $_GET['list_prd_id'] : '';
 
 function sanPhamTrongGioMuon($userId, $list_prd_id)
 {
-    $db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    try {
+        $dsn = "mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8";
+        $username = "root";
+        $password = ""; // nếu bạn không đặt mật khẩu
+
+        $db = new PDO($dsn, $username, $password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
+    } catch (PDOException $e) {
+        die("Lỗi kết nối CSDL: " . $e->getMessage());
+    }
     $stmt = $db->prepare("SELECT sach.masach AS maSach, sach.tensach AS tenSach, sach.img, sach.phimuon, sach.tomtat, 
       tacgia.tentg AS tacGia, 
       nhaxuatban.tennxb AS nhaXuatBan, 
@@ -35,7 +44,7 @@ function tinhTongPhiMuon($userId, $list_prd_id)
 
 function layThongTinDocGia($userId)
 {
-    $db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
+    $db = new PDO("mysql:host=localhost;dbname=thuvien;charset=utf8", "root", "");
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $stmt = $db->prepare("SELECT docgia.madg, docgia.ten, docgia.ngaysinh, docgia.gioitinh, docgia.sdt, docgia.diachi, 
       loaidocgia.tenloaidocgia, loaidocgia.soluongsachtoida
@@ -112,7 +121,7 @@ echo '          </ul>
 
 ?>
 <?php
-$conn = mysqli_connect("localhost", "root", "", "thuvien", 3307);
+$conn = mysqli_connect("localhost", "root", "", "thuvien");
 
 if ($conn) {
     $request_user_id = isset($_GET['userId']) ? $_GET['userId'] : '';

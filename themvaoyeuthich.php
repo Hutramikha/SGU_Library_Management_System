@@ -1,10 +1,10 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "thuvien", 3307);
+$conn = mysqli_connect("localhost", "root", "", "thuvien",3307);
 
 if ($conn) {
     // $user_id = $_SESSION['user_id']; 
-    $user_id = 9;
+    $userId = isset($_SESSION['idDocGia']) ? $_SESSION['idDocGia'] : '';
     $prd_id = $_GET['prd_id'];
 
     // Kiểm tra kết nối và truy vấn

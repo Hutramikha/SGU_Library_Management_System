@@ -113,6 +113,7 @@ function showPass() {
         if (inputPasswordLogin.type === 'password') {
             inputPasswordLogin.type = 'text';
             document.getElementById('show-pass-login').innerHTML = '<ion-icon name="lock-open"></ion-icon>';
+            console.log('nhannnnn');
         } else {
             inputPasswordLogin.type = 'password';
             document.getElementById('show-pass-login').innerHTML = '<ion-icon name="lock-closed">';
@@ -123,9 +124,11 @@ function showPass() {
         if (inputPasswordRegis.type === 'password') {
             inputPasswordRegis.type = 'text';
             document.getElementById('show-pass-regis').innerHTML = '<ion-icon name="lock-open"></ion-icon>';
+            console.log('nhannnnn');
         } else {
             inputPasswordRegis.type = 'password';
             document.getElementById('show-pass-regis').innerHTML = '<ion-icon name="lock-closed">';
+            console.log('nhannnnn');
         }
     })
 
@@ -133,9 +136,11 @@ function showPass() {
         if (inputrePasswordRegis.type === 'password') {
             inputrePasswordRegis.type = 'text';
             document.getElementById('show-repass-regis').innerHTML = '<ion-icon name="lock-open"></ion-icon>';
+            console.log('nhannnnn');
         } else {
             inputrePasswordRegis.type = 'password';
             document.getElementById('show-repass-regis').innerHTML = '<ion-icon name="lock-closed">';
+            console.log('nhannnnn');
         }
     })
 }
@@ -143,7 +148,7 @@ function showPass() {
 
 function show_close_Form() {
     // nút mở form đăng nhập - đăng ký
-    const btn_show = document.getElementById('btn_form_dn');
+    const btn_show = document.getElementById('btn_form_dn_dk');
 
     const wrapper = document.querySelector('.wrapper');
     const btn_close = document.getElementById('icon-close');
@@ -203,7 +208,7 @@ function resetInputDK() {
 
 function SignupAlert() {
     var s = '';
-    s += '<div style="text-align: center;">' + '<img style="height: 60px; border-radius: 50px;" src="../imgProfile/tick.webp" alt="">' + '</div>' +
+    s += '<div style="text-align: center;">' + '<img style="height: 60px; border-radius: 50px;" src="img/tick.webp" alt="">' + '</div>' +
         '<div id="add__mess" style="font-size: 1.2rem; color: #fff;">' + 'Đăng ký thành công' + '</div>';
     document.getElementById("signup_alert").innerHTML = s;
     var x = document.getElementById("signup_alert");
@@ -269,7 +274,7 @@ $(document).ready(function () {
 
         if (username !== '' && password !== '') {
             $.ajax({
-                url: '../DAO/dn_dk/checktk.php',
+                url: 'admin/DAO/dn_dk/checktk.php',
                 type: 'POST',
                 dataType: 'json',
                 data: { usernamekk: username },
@@ -277,7 +282,7 @@ $(document).ready(function () {
                     console.log('Phản hồi từ checktk:', response); // Kiểm tra phản hồi
                     if (response.tttk === 'success') {
                         $.ajax({
-                            url: '../DAO/dn_dk/login.php',
+                            url: 'admin/DAO/dn_dk/login.php',
                             type: 'POST',
                             data: { username_dn: username, password_dn: password, username_luu: usernameLuu, password_luu: passwordLuu },
                             dataType: 'json',
@@ -400,7 +405,7 @@ $(document).ready(function () {
         // Gửi dữ liệu đăng ký lên server
         $.ajax({
             type: 'POST',
-            url: '../DAO/dn_dk/signupKH.php',
+            url: 'admin/DAO/dn_dk/signupKH.php',
             data: { username_dk: username, email: email, password_dk: password, repassword_dk: repassword },
             dataType: 'json',
             success: function (response) {
@@ -470,38 +475,9 @@ function validatePassword(password) {
 }
 //--------kết thúc-----------
 
-
-//------ajax đăng xuất-------
-$(document).ready(function () {
-    // Thêm sự kiện click cho nút đăng xuất
-    $('#btn_dangxuat_menu').on('click',function (event) {
-        event.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
-        console.log("đã nhấn");
-        $.ajax({
-            url: '../DAO/dn_dk/logout.php', // Đường dẫn đến file PHP xử lý đăng xuất
-            type: 'POST',
-            success: function (response) {
-                console.log(response);
-                if (response === 'success') {
-                    // Xử lý khi thành công đăng xuất
-                    
-                    localStorage.removeItem('username');
-                    console.log("ĐÃ Đăng Xuất");
-                    // window.location.href = 'Form.php';
-                    window.location.reload();
-                }
-            }
-        });
-    });
-});
-//--------kết thúc-----------
-
-
-
-
 $(document).ready(function () {
     $.ajax({
-        url: "../DAO/dn_dk/cookie.php",
+        url: "admin/DAO/dn_dk/cookie.php",
         type: "POST",
         success: function (response) {
             console.log(response);

@@ -1,5 +1,5 @@
 <?php
-$userId =  isset($_GET['userId']) ? $_GET['userId'] : '';
+$userId = isset($_SESSION['idDocGia']) ? $_SESSION['idDocGia'] : '';
 
 ?>
 
@@ -22,10 +22,17 @@ $userId =  isset($_GET['userId']) ? $_GET['userId'] : '';
 
 
                 <?php
-                $userId = 9;
-                $db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
-                $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                try {
+                    $dsn = "mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8";
+                    $username = "root";
+                    $password = ""; // nếu bạn không đặt mật khẩu
 
+                    $db = new PDO($dsn, $username, $password, [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                    ]);
+                } catch (PDOException $e) {
+                    die("Lỗi kết nối CSDL: " . $e->getMessage());
+                }
                 $stmt = $db->prepare("SELECT sach.masach, sach.tensach, sach.img, sach.phimuon, sach.tomtat, 
                       tacgia.tentg AS tacGia, 
                       nhaxuatban.tennxb AS nhaXuatBan, 

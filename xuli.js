@@ -205,3 +205,4 @@ function setActiveMenuBar(element, type) {
     }
 }
 
+

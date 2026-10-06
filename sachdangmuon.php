@@ -1,5 +1,6 @@
 <?php
-$userId =  isset($_GET['userId']) ? $_GET['userId'] : '';
+$userId = isset($_SESSION['idDocGia']) ? $_SESSION['idDocGia'] : '';
+
 ?>
 
 <div class="container-fluid">
@@ -11,8 +12,17 @@ $userId =  isset($_GET['userId']) ? $_GET['userId'] : '';
         <div class="card-body" style="position: relative;">
             <div class="list-prd-in-cart" style="flex-direction: column;  max-height: 1200px; overflow-y: auto;">
                 <?php
-                $db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
-                $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                try {
+                    $dsn = "mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8";
+                    $username = "root";
+                    $password = ""; // nếu bạn không đặt mật khẩu
+
+                    $db = new PDO($dsn, $username, $password, [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                    ]);
+                } catch (PDOException $e) {
+                    die("Lỗi kết nối CSDL: " . $e->getMessage());
+                }
 
                 $stmt = $db->prepare("SELECT sach.masach, sach.tensach, sach.img, sach.phimuon, sach.tomtat, 
                       tacgia.tentg AS tacGia, 
@@ -20,12 +30,13 @@ $userId =  isset($_GET['userId']) ? $_GET['userId'] : '';
                       theloai.tentl AS theLoai,
                       phieumuon.ngaymuon AS ngayMuon,
                       phieumuon.hantra AS hanTra,
-                    chitietphieumuon.tinhtrangmuon AS tinhTrangMuon
+                      chitietphieumuon.tinhtrangmuon AS tinhTrangMuon
                       FROM sach 
                       INNER JOIN tacgia ON sach.matg = tacgia.matg
                       INNER JOIN nhaxuatban ON sach.manxb = nhaxuatban.manxb
-                      INNER JOIN theloai ON sach.matl = theloai.matl 
-                      INNER JOIN chitietphieumuon ON sach.masach = chitietphieumuon.masach
+                      INNER JOIN theloai ON sach.matl = theloai.matl
+                      INNER JOIN chitietsach ON sach.masach = chitietsach.masach
+                      INNER JOIN chitietphieumuon ON chitietsach.mavach = chitietphieumuon.mavach
                       INNER JOIN phieumuon ON chitietphieumuon.mapm = phieumuon.mapm
                       WHERE  phieumuon.madg = :userId
                       ");

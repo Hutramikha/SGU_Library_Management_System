@@ -1457,6 +1457,45 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+
+
+
+//------ajax đăng xuất-------
+    $(document).ready(function () {
+        // Thêm sự kiện click cho nút đăng xuất
+        $('.btn-logout').on('click', function (event) {
+            event.preventDefault(); // Ngăn chặn hành động mặc định
+
+            // Hiển thị hộp thoại xác nhận
+            const xacNhan = confirm("Bạn có chắc chắn muốn đăng xuất không?");
+            if (!xacNhan) {
+                return; // Nếu người dùng chọn Cancel → không làm gì cả
+            }
+
+            console.log("đã nhấn");
+            $.ajax({
+                url: '../DAO/dn_dk/logout.php',
+                type: 'POST',
+                success: function (response) {
+                    try {
+                        const data = typeof response === 'string' ? JSON.parse(response) : response;
+                        if (data.status === 'success') {
+                            localStorage.removeItem('username');
+                            console.log("ĐÃ Đăng Xuất");
+                            window.location.replace('/SGU_Library_Management_System/index.php?act=danhSachSanPham');
+                        }
+                    } catch (e) {
+                        console.error("Lỗi khi xử lý phản hồi:", e);
+                    }
+                },
+                error: function () {
+                    console.error("Lỗi AJAX khi gọi logout.php");
+                }
+            });
+        });
+    });
+//--------kết thúc-----------
+
     //-----------------Chức năng chức năng
 //    const openFuncForm = document.querySelector('.btn-chucnang');
 //    const closeFuncForm = document.querySelector('.btn-close-func-form');
@@ -1711,30 +1750,7 @@ document.addEventListener("DOMContentLoaded", () => {
 //        }
 //    });
 
-    //------ajax đăng xuất-------
-    $(document).ready(function () {
-        // Thêm sự kiện click cho nút đăng xuất
-        $('.btn-logout').on('click', function (event) {
-            event.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
-            console.log("đã nhấn");
-            $.ajax({
-                url: '../DAO/dn_dk/logout.php', // Đường dẫn đến file PHP xử lý đăng xuất
-                type: 'POST',
-                success: function (response) {
-                    console.log(response);
-                    if (response === 'success') {
-                        // Xử lý khi thành công đăng xuất
-
-                        localStorage.removeItem('username');
-                        console.log("ĐÃ Đăng Xuất");
-                        // window.location.href = 'Form.php';
-                        window.location.reload();
-                    }
-                }
-            });
-        });
-    });
-    //--------kết thúc-----------
+   
 
 });
 
