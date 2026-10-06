@@ -8,7 +8,7 @@ $wellLiked = isset($_GET['wellLiked']) ? $_GET['wellLiked'] : 0;
 $author = isset($_GET['author']) ? $_GET['author'] : '';
 $genre = isset($_GET['genre']) ? $_GET['genre'] : '';
 
-$db = new PDO("mysql:host=localhost;dbname=thuvien;charset=utf8", "root", "");
+$db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
 $stmt = $db->prepare("SELECT sach.masach, sach.tensach, sach.img, sach.phimuon, sach.tomtat, 
                       tacgia.tentg AS tacGia, 
                       nhaxuatban.tennxb AS nhaXuatBan, 

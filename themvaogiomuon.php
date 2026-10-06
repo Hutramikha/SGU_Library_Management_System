@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "thuvien");
+$conn = mysqli_connect("localhost", "root", "", "thuvien", 3307);
 
 if ($conn) {
     $userId = isset($_GET['userId']) ? intval($_GET['userId']) : '';

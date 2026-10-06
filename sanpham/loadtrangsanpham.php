@@ -1,5 +1,5 @@
 <?php
-$db = new PDO("mysql:host=localhost;dbname=thuvien;charset=utf8", "root", "");
+$db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $theLoaiSach_sql = $db->prepare("SELECT * FROM theloai");
 $theLoaiSach_sql->execute();

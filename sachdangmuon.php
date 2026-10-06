@@ -11,7 +11,7 @@ $userId =  isset($_GET['userId']) ? $_GET['userId'] : '';
         <div class="card-body" style="position: relative;">
             <div class="list-prd-in-cart" style="flex-direction: column;  max-height: 1200px; overflow-y: auto;">
                 <?php
-                $db = new PDO("mysql:host=localhost;dbname=thuvien;charset=utf8", "root", "");
+                $db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
                 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 $stmt = $db->prepare("SELECT sach.masach, sach.tensach, sach.img, sach.phimuon, sach.tomtat, 

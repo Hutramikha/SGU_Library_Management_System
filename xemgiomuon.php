@@ -23,7 +23,7 @@ $userId =  isset($_GET['userId']) ? $_GET['userId'] : '';
 
                 <?php
                 $userId = 9;
-                $db = new PDO("mysql:host=localhost;dbname=thuvien;charset=utf8", "root", "");
+                $db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
                 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 $stmt = $db->prepare("SELECT sach.masach, sach.tensach, sach.img, sach.phimuon, sach.tomtat, 

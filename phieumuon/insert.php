@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = mysqli_connect("localhost", "root", "", "thuvien");
+$conn = mysqli_connect("localhost", "root", "", "thuvien", 3307);
 if ($conn) {
     $list_request_prd_id = isset($_GET['list_request_prd_id']) ? $_GET['list_request_prd_id'] : '';
     $request_user_id = isset($_GET['request_user_id']) ? $_GET['request_user_id'] : '';

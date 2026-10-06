@@ -3,7 +3,7 @@ session_start();
 
 // if (isset($_SESSION['username']) && isset($_SESSION['password'])) {
 // include "./model/pdo.php";
-// $db = new PDO("mysql:host=localhost;dbname=thuvien;charset=utf8", "root", "");
+// $db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
 // $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 // $action = isset($_GET['act']) ? $_GET['act'] : 'danhSachSanPham';
 // $searchInput = isset($_GET['searchInput']) ? $_GET['searchInput'] : '';
@@ -20,7 +20,7 @@ session_start();
 
 include "./model/pdo.php";
 include "header.php";
-$db = new PDO("mysql:host=localhost;dbname=thuvien;charset=utf8", "root", "");
+$db = new PDO("mysql:host=localhost;port=3307;dbname=thuvien;charset=utf8", "root", "");
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $action = isset($_GET['act']) ? $_GET['act'] : 'danhSachSanPham';
 $searchInput = isset($_GET['searchInput']) ? $_GET['searchInput'] : '';
